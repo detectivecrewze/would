@@ -229,7 +229,7 @@ h1, h2 { font-family: 'Balsamiq Sans', cursive; font-weight: 700; letter-spacing
 .page--letter h2 { max-width: 100%; }
 .letter-paper { position: relative; z-index: 1; display: flex; flex-direction: column; flex: 1; padding: 17px 5px 12px; }
 .letter-paper__dear { font: 30px 'Caveat', cursive; color: var(--accent-deep); }
-.letter-paper>p { font: 27px/1.25 'Caveat', cursive; color: var(--ink-soft); margin: 17px 0 15px; }
+.letter-paper>p { font: 27px/1.25 'Caveat', cursive; color: var(--ink-soft); margin: 17px 0 15px; white-space: pre-line; overflow-wrap: anywhere; }
 .letter-paper__signoff { margin-top: auto; align-self: flex-end; text-align: right; font: 21px/1.1 'Caveat', cursive; color: var(--ink-soft); }
 .letter-paper__signoff strong { display: block; font: 40px 'Caveat', cursive; color: var(--accent-deep); }
 

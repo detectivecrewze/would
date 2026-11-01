@@ -14,7 +14,7 @@ if (giftToLoad) {
   app.innerHTML = '<main class="gift-loading" role="status">Loading your little story…</main>';
   try {
     const apiBase = requestedGiftId ? API_BASE : 'https://crush-note-api.aldoramadhan16.workers.dev';
-    const response = await fetch(apiBase + '/api/public/gifts/' + encodeURIComponent(giftToLoad));
+    const response = await fetch(apiBase + '/api/public/gifts/' + encodeURIComponent(giftToLoad), { cache: 'no-store' });
     const payload = await response.json();
     if (!response.ok || !payload.project) throw new Error(payload.error || 'Gift not found.');
     gift = payload.project;
