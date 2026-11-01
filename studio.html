@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fff8ed" />
+    <meta name="description" content="Studio self-edit untuk menyusun Crush Note." />
+    <title>Crush Note Studio</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&family=Caveat:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/studio.css" />
+  </head>
+  <body>
+    <div class="studio-shell">
+      <header class="studio-header">
+        <a class="studio-brand" href="/studio/" aria-label="Crush Note Studio">
+          <span class="studio-brand__mark">♡</span>
+          <span><small>SELF-EDIT GIFT</small><strong>Crush Note Studio</strong></span>
+        </a>
+        <div class="header-actions">
+          <span class="save-state" id="save-state" aria-live="polite">Tersimpan</span>
+          <button class="button button--ghost" id="open-preview" type="button">Lihat preview</button>
+        </div>
+      </header>
+
+      <nav class="steps" aria-label="Tahapan Studio">
+        <button class="step is-active" data-step="0" type="button"><span>01</span><b>Identitas</b></button>
+        <button class="step" data-step="1" type="button"><span>02</span><b>Awal cerita</b></button>
+        <button class="step" data-step="2" type="button"><span>03</span><b>Isi hati</b></button>
+        <button class="step" data-step="3" type="button"><span>04</span><b>Ending</b></button>
+        <button class="step" data-step="4" type="button"><span>05</span><b>Bagikan</b></button>
+      </nav>
+
+      <main class="studio-layout">
+        <form class="editor" id="editor" novalidate>
+          <section class="editor-step is-active" data-panel="0">
+            <div class="section-heading"><span>STEP 01</span><h1>Bahasa dan tokoh ceritamu.</h1><p>Pilih bahasa gift terlebih dahulu. Preset pada langkah berikutnya otomatis mengikuti bahasa ini, sementara tulisanmu tetap dapat diedit kapan saja.</p></div>
+            <div class="locale-picker" aria-label="Pilih bahasa gift">
+              <button type="button" data-locale="id"><b>ID</b><span><strong>Bahasa Indonesia</strong><small>Studio, preset, dan tombol gift memakai Bahasa Indonesia.</small></span></button>
+              <button type="button" data-locale="en"><b>EN</b><span><strong>English</strong><small>Studio presets and gift controls use English.</small></span></button>
+            </div>
+            <section class="theme-picker" aria-label="Pilih tema warna gift">
+              <div class="theme-picker__intro"><span>WARNA GIFT</span><h2>Pilih suasana warnanya</h2><p>Pilih warna untuk seluruh halaman gift. Isi ceritamu akan tetap sama.</p></div>
+              <div class="theme-options" id="theme-options" role="group" aria-label="Pilihan warna gift"></div>
+            </section>
+            <div class="field-grid field-grid--two">
+              <label class="field"><span>Nama pengirim <b>WAJIB</b></span><input data-path="sender" autocomplete="off" /></label>
+              <label class="field"><span>Nama penerima <b>WAJIB</b></span><input data-path="recipient" autocomplete="off" /></label>
+            </div>
+            <div class="subheading"><span>TRANSISI PEMBUKA</span><h2>Foto puzzle</h2><p>Foto ini hanya dipakai pada puzzle sebelum gift dibuka. Foto boleh dikosongkan, tetapi sangat direkomendasikan.</p></div>
+            <article class="photo-card photo-card--wide" data-photo-card="puzzle.photo"><div class="photo-card__preview"></div><div><span class="photo-card__tag">RECOMMENDED</span><h3>Foto puzzle</h3><p>Pilih foto yang jelas dan punya ruang cukup agar tiga kepingnya mudah terlihat.</p><div class="photo-actions"><label>Ganti foto<input type="file" accept="image/*" data-photo="puzzle.photo" /></label><button type="button" data-remove-photo="puzzle.photo">Hapus</button></div></div></article>
+          </section>
+
+          <section class="editor-step" data-panel="1" hidden>
+            <div class="section-heading"><span>STEP 02</span><h1>Buka ceritanya dengan ringan.</h1><p>Atur cover comic dan halaman pertama. Tulis dengan gaya bicaramu sendiri agar tidak terasa seperti template.</p></div>
+            <fieldset class="editor-card"><legend>Opening gift</legend>
+              <div class="preset-row" data-preset-scope="cover"></div>
+              <article class="photo-card photo-card--wide" data-photo-card="cover.photo"><div class="photo-card__preview"></div><div><span class="photo-card__tag">OPTIONAL</span><h3>Foto opening</h3><p>Foto yang tampil pada cover comic setelah puzzle selesai.</p><div class="photo-actions"><label>Ganti foto<input type="file" accept="image/*" data-photo="cover.photo" /></label><button type="button" data-remove-photo="cover.photo">Hapus</button></div></div></article>
+              <label class="field"><span>Catatan kecil di atas judul</span><input data-path="cover.kicker" /></label>
+              <label class="field"><span>Judul opening <b>WAJIB</b></span><textarea rows="2" data-path="cover.title"></textarea></label>
+              <label class="field"><span>Petunjuk membuka cerita</span><input data-path="cover.hint" /></label>
+            </fieldset>
+            <fieldset class="editor-card"><legend>Chapter 1 — Awal cerita</legend>
+              <div class="preset-row" data-preset-scope="memory"></div>
+              <article class="photo-card photo-card--wide" data-photo-card="memory.photo"><div class="photo-card__preview"></div><div><span class="photo-card__tag">OPTIONAL</span><h3>Foto Chapter 1</h3><p>Pilih foto yang cocok dengan cerita tentang awal mula perasaanmu.</p><div class="photo-actions"><label>Ganti foto<input type="file" accept="image/*" data-photo="memory.photo" /></label><button type="button" data-remove-photo="memory.photo">Hapus</button></div></div></article>
+              <label class="field"><span>Label halaman</span><input data-path="memory.label" /></label>
+              <label class="field"><span>Judul Chapter 1 <b>WAJIB</b></span><textarea rows="2" data-path="memory.title"></textarea></label>
+              <label class="field"><span>Caption foto</span><input data-path="memory.caption" /></label>
+              <label class="field"><span>Isi cerita <b>WAJIB</b></span><textarea rows="5" data-path="memory.body"></textarea><small>Ceritakan bagaimana semuanya bermula atau momen kecil yang membuat kamu mulai tertarik.</small></label>
+            </fieldset>
+          </section>
+
+          <section class="editor-step" data-panel="2" hidden>
+            <div class="section-heading"><span>STEP 03</span><h1>Bagian yang membuatnya terasa personal.</h1><p>Isi alasan-alasan kecil lalu lanjutkan dengan surat yang lebih jujur.</p></div>
+            <fieldset class="editor-card"><legend>Chapter 2 — Alasan kecil</legend>
+              <div class="preset-row" data-preset-scope="reasons"></div>
+              <article class="photo-card photo-card--wide" data-photo-card="reasons.photo"><div class="photo-card__preview"></div><div><span class="photo-card__tag">OPTIONAL</span><h3>Foto Chapter 2</h3><p>Gunakan foto yang berbeda agar halaman alasan kecil terasa seperti chapter baru.</p><div class="photo-actions"><label>Ganti foto<input type="file" accept="image/*" data-photo="reasons.photo" /></label><button type="button" data-remove-photo="reasons.photo">Hapus</button></div></div></article>
+              <label class="field"><span>Label halaman</span><input data-path="reasons.label" /></label>
+              <label class="field"><span>Judul Chapter 2 <b>WAJIB</b></span><textarea rows="2" data-path="reasons.title"></textarea></label>
+              <div class="field-grid field-grid--three">
+                <label class="field"><span>Alasan 1</span><textarea rows="3" data-path="reasons.items.0"></textarea></label>
+                <label class="field"><span>Alasan 2</span><textarea rows="3" data-path="reasons.items.1"></textarea></label>
+                <label class="field"><span>Alasan 3</span><textarea rows="3" data-path="reasons.items.2"></textarea></label>
+              </div>
+              <label class="field"><span>Catatan penutup halaman</span><input data-path="reasons.note" /></label>
+            </fieldset>
+            <fieldset class="editor-card"><legend>Chapter 3 — Surat singkat</legend>
+              <div class="preset-row" data-preset-scope="letter"></div>
+              <label class="field"><span>Label halaman</span><input data-path="letter.label" /></label>
+              <label class="field"><span>Judul surat <b>WAJIB</b></span><textarea rows="2" data-path="letter.title"></textarea></label>
+              <label class="field"><span>Isi surat <b>WAJIB</b></span><textarea rows="9" data-path="letter.body"></textarea><small>Tidak ada batas kata. Tulis sepanjang yang kamu perlukan.</small></label>
+              <label class="field"><span>Kalimat sebelum tanda tangan</span><input data-path="letter.signoff" /></label>
+            </fieldset>
+          </section>
+
+          <section class="editor-step" data-panel="3" hidden>
+            <div class="section-heading"><span>STEP 04</span><h1>Pertanyaan terakhir dan soundtrack.</h1><p>Atur momen puncak gift, respons setelah jawaban, dan lagu yang menemani ceritamu.</p></div>
+            <fieldset class="editor-card"><legend>Pertanyaan akhir</legend>
+              <div class="preset-row" data-preset-scope="question"></div>
+              <label class="field"><span>Label halaman</span><input data-path="question.label" /></label>
+              <label class="field"><span>Pertanyaan utama <b>WAJIB</b></span><textarea rows="3" data-path="question.title"></textarea></label>
+              <div class="field-grid field-grid--two"><label class="field"><span>Teks tombol Iya</span><input data-path="question.yes" /></label><label class="field"><span>Teks tombol Tidak</span><input data-path="question.no" /></label></div>
+            </fieldset>
+            <fieldset class="editor-card"><legend>Respons setelah menjawab</legend>
+              <div class="field-grid field-grid--two">
+                <label class="field"><span>Judul saat memilih Iya</span><input data-path="question.yesTitle" /></label>
+                <label class="field"><span>Pesan saat memilih Iya</span><textarea rows="3" data-path="question.yesBody"></textarea></label>
+                <label class="field"><span>Judul saat memilih Tidak</span><input data-path="question.noTitle" /></label>
+                <label class="field"><span>Pesan saat memilih Tidak</span><textarea rows="3" data-path="question.noBody"></textarea></label>
+              </div>
+            </fieldset>
+            <fieldset class="editor-card"><legend>Soundtrack gift</legend>
+              <div class="music-choice"><button type="button" class="is-active" data-music-mode="library">Pilih dari library</button><button type="button" data-music-mode="upload">Upload MP3 sendiri</button></div>
+              <div id="music-library-panel"><label class="field"><span>Cari lagu</span><input id="music-search" type="search" placeholder="Cari judul atau artis..." /></label><div class="music-library" id="music-library"><p>Memuat playlist...</p></div></div>
+              <div id="music-upload-panel" hidden><label class="audio-upload"><input id="audio-upload" type="file" accept="audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/*"/><span>＋</span><strong>Pilih file MP3</strong><small>File disimpan di browser untuk fase lokal ini.</small></label></div>
+              <div class="selected-track" id="selected-track"></div>
+              <div class="field-grid field-grid--two"><label class="field"><span>Judul lagu</span><input data-path="music.title" /></label><label class="field"><span>Nama artis</span><input data-path="music.artist" /></label></div>
+            </fieldset>
+          </section>
+
+          <section class="editor-step" data-panel="4" hidden>
+            <div class="section-heading"><span>STEP 05</span><h1>Gift siap dibagikan.</h1><p>Pilih cara yang paling nyaman: kirim link langsung atau unduh barcode berbentuk love stamp.</p></div>
+            <div class="publish-grid">
+              <section class="share-card"><span>LINK GIFT</span><h2>Kirim link langsung</h2><p>Gunakan alamat final gift setelah website dipublikasikan. Untuk preview lokal, alamat di bawah otomatis memakai halaman ini.</p><label class="field"><span>Alamat gift</span><input id="share-url" type="url" /></label><button class="button button--primary" id="copy-link" type="button">Salin link</button></section>
+              <section class="barcode-card"><div class="barcode-paper" id="barcode-paper"><div id="barcode-qr" role="img" aria-label="Heart-shaped gift QR code"></div><p>SCAN TO OPEN THE STORY</p></div><button class="button button--primary" id="download-barcode" type="button">Unduh barcode PNG</button></section>
+            </div>
+          </section>
+
+          <footer class="editor-footer">
+            <button class="button button--ghost" id="previous-step" type="button">Sebelumnya</button>
+            <button class="button button--primary" id="next-step" type="button">Lanjutkan</button>
+            <button class="button button--finish" id="finish-gift" type="button" hidden>Selesai & buka gift</button>
+          </footer>
+        </form>
+
+        <aside class="preview-panel" id="preview-panel" aria-label="Live preview">
+          <div class="preview-panel__head"><div><small>LIVE PREVIEW</small><strong id="preview-label">Puzzle opening</strong></div><button id="close-preview" type="button" aria-label="Tutup preview">×</button></div>
+          <div class="preview-tabs" aria-label="Pilih bagian preview">
+            <button class="is-active" data-preview="puzzle" type="button">Puzzle</button><button data-preview="opening" type="button">Opening</button><button data-preview="chapter1" type="button">Ch. 1</button><button data-preview="chapter2" type="button">Ch. 2</button><button data-preview="letter" type="button">Surat</button><button data-preview="ending" type="button">Ending</button>
+          </div>
+          <div class="preview-frame"><iframe id="gift-preview" title="Preview Crush Note" src="/?preview=1&section=puzzle"></iframe></div>
+        </aside>
+      </main>
+    </div>
+    <dialog class="preset-modal" id="preset-preview-dialog" aria-labelledby="preset-modal-title">
+      <div class="preset-modal__card">
+        <header class="preset-modal__head">
+          <div><span id="preset-modal-eyebrow">LIHAT PRESET</span><h2 id="preset-modal-title"></h2></div>
+          <button class="preset-modal__close" type="button" data-preset-cancel aria-label="Tutup pratinjau preset">×</button>
+        </header>
+        <p class="preset-modal__intro" id="preset-modal-description"></p>
+        <p class="preset-modal__changes-label" id="preset-modal-changes-label">PERUBAHAN TEKS</p>
+        <div class="preset-modal__changes" id="preset-preview-changes"></div>
+        <footer class="preset-modal__actions">
+          <button class="button button--ghost" type="button" data-preset-cancel id="preset-modal-cancel">Kembali</button>
+          <button class="button button--primary" type="button" id="preset-modal-apply">Terapkan preset</button>
+        </footer>
+      </div>
+    </dialog>
+    <div class="studio-toast" id="studio-toast" role="status" aria-live="polite"></div>
+    <script src="/assets/vendor/qrcode.min.js"></script>
+    <script type="module" src="/src/studio.js"></script>
+  </body>
+</html>

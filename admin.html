@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f3e1cf" />
+    <meta name="description" content="Dashboard internal untuk mengelola Crush Note." />
+    <title>Crush Note — Admin</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&family=Caveat:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/admin.css" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-header"><a class="admin-brand" href="/"><span>♡</span><b>Crush Note</b></a><small>MEJA EDITOR</small></header>
+      <section class="admin-intro"><span>INTERNAL DASHBOARD</span><h1>Semua cerita,<br/>satu tempat.</h1><p>Buat gift baru, lanjutkan edit, dan buka gift yang sudah dipublikasikan.</p></section>
+      <section class="admin-login" id="login-panel">
+        <label for="admin-token">Token admin</label>
+        <div class="admin-login__row"><input id="admin-token" type="password" autocomplete="current-password" placeholder="Masukkan token admin Worker" /><button id="login-button" type="button">Masuk</button></div>
+        <p id="login-error" role="status"></p>
+      </section>
+      <section id="dashboard" hidden>
+        <div class="dashboard-heading"><div><span>PROJECT</span><h2>Gift kamu</h2></div><button id="create-project" type="button">＋ Buat gift baru</button></div>
+        <nav class="project-tabs" aria-label="Filter gift">
+          <button type="button" data-project-filter="all" class="is-active">Semua</button>
+          <button type="button" data-project-filter="draft">Draft</button>
+          <button type="button" data-project-filter="published">Dipublikasikan</button>
+        </nav>
+        <div id="project-list" class="project-list" aria-live="polite"></div>
+        <p class="admin-footnote">Draft tersimpan di KV. Foto dan musik tersimpan di R2 pada folder Crush Note.</p>
+      </section>
+      <dialog class="create-modal" id="create-modal">
+        <form method="dialog" class="create-modal__card">
+          <button class="create-modal__close" id="close-create-modal" type="button" aria-label="Tutup">×</button>
+          <div id="create-form-view">
+            <span class="modal-eyebrow">GIFT BARU</span>
+            <h2>Buat cerita baru.</h2>
+            <p>Gift akan dibuat sebagai draft. Setelah itu, kamu bisa menyusun teks, foto, warna, dan musik di Studio.</p>
+            <label class="modal-check"><input id="start-with-defaults" type="checkbox" checked /><span>Mulai dengan contoh isi siap edit</span></label>
+            <div class="create-modal__actions"><button id="cancel-create" class="button-muted" type="button">Batal</button><button id="confirm-create" class="button-primary" type="button">Buat gift</button></div>
+          </div>
+          <div id="create-result-view" hidden>
+            <span class="modal-eyebrow">DRAFT SIAP</span>
+            <h2>Gift sudah dibuat.</h2>
+            <p>Salin link Studio untuk dibuka nanti, atau langsung lanjut menyusun gift.</p>
+            <label class="modal-link-label" for="new-studio-link">LINK STUDIO EDITOR</label>
+            <input id="new-studio-link" class="modal-link" readonly />
+            <div class="create-modal__actions"><button id="copy-new-link" class="button-muted" type="button">Salin link</button><button id="open-new-studio" class="button-primary" type="button">Buka Studio</button></div>
+          </div>
+        </form>
+      </dialog>
+      <dialog class="delete-modal" id="delete-modal">
+        <section class="delete-modal__card" aria-labelledby="delete-title">
+          <button class="create-modal__close" id="close-delete-modal" type="button" aria-label="Tutup">×</button>
+          <span class="modal-eyebrow">HAPUS PROJECT</span>
+          <h2 id="delete-title">Hapus gift ini?</h2>
+          <p>Gift terbit, draft, link Studio, dan semua foto atau lagu di folder project akan dihapus permanen.</p>
+          <label class="modal-link-label" for="delete-confirm-input">Ketik ID gift untuk mengonfirmasi</label>
+          <input id="delete-confirm-input" class="modal-link" autocomplete="off" />
+          <p class="delete-target" id="delete-target"></p>
+          <div class="create-modal__actions"><button id="cancel-delete" class="button-muted" type="button">Batal</button><button id="confirm-delete" class="button-danger" type="button" disabled>Hapus permanen</button></div>
+        </section>
+      </dialog>
+      <div class="admin-toast" id="admin-toast" role="status" aria-live="polite"></div>
+    </main>
+    <script type="module" src="/src/admin.js"></script>
+  </body>
+</html>

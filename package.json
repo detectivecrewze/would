@@ -1,0 +1,10 @@
+{
+  "name": "crush-note",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:site": "node dev-server.mjs",
+    "dev:worker": "wrangler dev --local --port 8787",
+    "check:worker": "node --check worker/index.js"
+  }
+}
