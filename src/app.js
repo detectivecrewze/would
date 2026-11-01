@@ -153,7 +153,7 @@ function cover() {
 }
 
 function memory() {
-  return `<section class="page page--memory" aria-label="Awal cerita"><span class="eyebrow">${escape(gift.memory.label)}</span><h2>${escape(gift.memory.title)}</h2><div class="comic-photo comic-photo--large">${photoContent(gift.memory.photo, 'Foto momen bersama')}<span class="comic-photo__flash" aria-hidden="true">✳</span></div><p class="hand-caption">${escape(gift.memory.caption)}</p><div class="speech-bubble"><span>aku:</span><p>${escape(gift.memory.body)}</p></div>${pager()}</section>`;
+  return `<section class="page page--memory" aria-label="Awal cerita"><span class="eyebrow">${escape(gift.memory.label)}</span><h2>${escape(gift.memory.title)}</h2><div class="comic-photo comic-photo--large">${photoContent(gift.memory.photo, 'Foto momen bersama')}<span class="comic-photo__flash" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M24 3 27 18 40 9 31 22 46 24 31 28 40 41 27 32 24 47 21 32 8 41 17 28 2 24 17 22 8 9 21 18Z"/></svg></span></div><p class="hand-caption">${escape(gift.memory.caption)}</p><div class="speech-bubble"><span>aku:</span><p>${escape(gift.memory.body)}</p></div>${pager()}</section>`;
 }
 
 function reasons() {

@@ -207,7 +207,9 @@ h1, h2 { font-family: 'Balsamiq Sans', cursive; font-weight: 700; letter-spacing
 .photo-placeholder span svg { width: 31px; height: 31px; color: var(--accent); }
 .photo-placeholder strong { font: 700 16px 'Balsamiq Sans', cursive; letter-spacing: .13em; }
 .photo-placeholder small { font: 25px 'Caveat', cursive; color: var(--accent-deep); }
-.comic-photo__flash { position: absolute; top: -22px; left: -15px; font: 48px 'Caveat', cursive; color: var(--accent-light); text-shadow: 2px 2px 0 var(--ink); }
+.comic-photo__flash { position: absolute; z-index: 2; top: -15px; left: -12px; width: 34px; height: 34px; color: var(--accent); transform: rotate(-8deg); filter: drop-shadow(2px 2px 0 var(--ink)); pointer-events: none; }
+.comic-photo__flash svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.comic-photo__flash path { fill: var(--highlight); stroke: currentColor; stroke-width: 2.2; stroke-linejoin: round; }
 .page--memory>.hand-caption { text-align: center; margin: 2px 0 19px; transform: rotate(-3deg); }
 .speech-bubble { border: 2px solid var(--ink); background: var(--secondary); border-radius: 21px; padding: 15px 18px 12px; position: relative; box-shadow: 4px 4px 0 var(--ink); }
 .speech-bubble span { display: inline-block; font: 700 11px 'Balsamiq Sans', cursive; letter-spacing: .1em; color: var(--secondary-ink); text-transform: uppercase; margin-bottom: 7px; }
