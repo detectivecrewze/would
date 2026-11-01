@@ -1,8 +1,24 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/admin/", "destination": "/admin.html" },
-    { "source": "/studio", "destination": "/studio.html" },
-    { "source": "/studio/", "destination": "/studio.html" }
+    {
+      "source": "/share/:id",
+      "destination": "/api/share/:id"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/studio",
+      "destination": "/studio.html"
+    },
+    {
+      "source": "/studio/",
+      "destination": "/studio.html"
+    }
   ]
 }

@@ -119,7 +119,7 @@ function renderProjects() {
     actions.append(copyStudio, openStudio, deleteGift);
     if (project.status === "published") {
       const openGift = document.createElement("a");
-      openGift.href = new URL("/?gift=" + encodeURIComponent(project.id), PUBLIC_APP_URL).toString();
+      openGift.href = new URL("/share/" + encodeURIComponent(project.id), PUBLIC_APP_URL).toString();
       openGift.target = "_blank";
       openGift.rel = "noopener";
       openGift.textContent = "Lihat gift";

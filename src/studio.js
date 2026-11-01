@@ -218,14 +218,14 @@ const presetFieldLabels = {
     'memory.label':'Label halaman', 'memory.title':'Judul Chapter 1', 'memory.caption':'Caption foto', 'memory.body':'Isi cerita',
     'reasons.label':'Label halaman', 'reasons.title':'Judul Chapter 2', 'reasons.items.0':'Alasan 1', 'reasons.items.1':'Alasan 2', 'reasons.items.2':'Alasan 3', 'reasons.note':'Catatan penutup',
     'letter.label':'Label halaman', 'letter.title':'Judul surat', 'letter.body':'Isi surat', 'letter.signoff':'Kalimat tanda tangan',
-    'question.label':'Label halaman', 'question.title':'Pertanyaan utama', 'question.yes':'Tombol Iya', 'question.no':'Tombol Tidak', 'question.yesTitle':'Judul respons Iya', 'question.yesBody':'Pesan respons Iya', 'question.noTitle':'Judul respons Tidak', 'question.noBody':'Pesan respons Tidak',
+    'question.label':'Label halaman', 'question.title':'Pertanyaan utama', 'question.yes':'Tombol Iya', 'question.no':'Tombol Tidak', 'question.yesBody':'Pesan respons Iya', 'question.noBody':'Pesan respons Tidak',
   },
   en: {
     'cover.kicker':'Small note', 'cover.title':'Opening title', 'cover.hint':'Opening prompt',
     'memory.label':'Page label', 'memory.title':'Chapter 1 title', 'memory.caption':'Photo caption', 'memory.body':'Story',
     'reasons.label':'Page label', 'reasons.title':'Chapter 2 title', 'reasons.items.0':'Reason 1', 'reasons.items.1':'Reason 2', 'reasons.items.2':'Reason 3', 'reasons.note':'Closing note',
     'letter.label':'Page label', 'letter.title':'Letter title', 'letter.body':'Letter', 'letter.signoff':'Sign-off',
-    'question.label':'Page label', 'question.title':'Main question', 'question.yes':'Yes button', 'question.no':'No button', 'question.yesTitle':'Yes response title', 'question.yesBody':'Yes response message', 'question.noTitle':'No response title', 'question.noBody':'No response message',
+    'question.label':'Page label', 'question.title':'Main question', 'question.yes':'Yes button', 'question.no':'No button', 'question.yesBody':'Yes response message', 'question.noBody':'No response message',
   },
 };
 

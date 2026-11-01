@@ -3,18 +3,23 @@ import { giftThemes } from './themes.js';
 import { API_BASE } from './config.js';
 
 const app = document.querySelector('#app');
-const requestedGiftId = new URLSearchParams(location.search).get('gift');
+const searchParams = new URLSearchParams(location.search);
+const requestedGiftId = searchParams.get('gift');
+const featuredGiftId = 'crush-note-9a199158';
+const previewMode = searchParams.has('preview');
+const giftToLoad = requestedGiftId || (!previewMode ? featuredGiftId : null);
 let gift = loadGift();
 let giftLoadError = '';
-if (requestedGiftId) {
+if (giftToLoad) {
   app.innerHTML = '<main class="gift-loading" role="status">Loading your little story…</main>';
   try {
-    const response = await fetch(API_BASE + '/api/public/gifts/' + encodeURIComponent(requestedGiftId));
+    const apiBase = requestedGiftId ? API_BASE : 'https://crush-note-api.aldoramadhan16.workers.dev';
+    const response = await fetch(apiBase + '/api/public/gifts/' + encodeURIComponent(giftToLoad));
     const payload = await response.json();
     if (!response.ok || !payload.project) throw new Error(payload.error || 'Gift not found.');
     gift = payload.project;
   } catch (error) {
-    giftLoadError = error.message || 'Gift could not be loaded.';
+    if (requestedGiftId) giftLoadError = error.message || 'Gift could not be loaded.';
   }
 }
 const audio = new Audio();
@@ -23,10 +28,10 @@ audio.loop = true;
 
 const fixedCopy = {
   id: {
-    soundtrack: 'SOUNDTRACK KITA', puzzleEyebrow: 'HADIAH KECIL UNTUKMU', puzzleTitle: 'Lengkapi fotonya,<br/>lalu buka hadiah kecilmu.', installed: 'KEPING TERPASANG', assist: 'Buka tanpa menggeser', complete: 'fotonya sudah lengkap', openStory: 'Buka ceritanya', musicError: 'Lagu belum dapat diputar. Ceritanya tetap bisa dibuka.', for: 'untuk', from: 'dari', open: 'Buka ceritanya', tap: 'ketuk untuk memulai cerita', storyBy: 'sebuah cerita kecil dari', previous: 'Halaman sebelumnya', next: 'Halaman berikutnya', deepBreath: 'okay, tarik napas dulu...', choose: 'Pilih jawabanmu, ya.', end: 'AKHIR... ATAU AWAL BARU?', goodStory: 'ternyata, kita bisa menjadi cerita yang baik', courage: 'butuh keberanian untuk mengatakan ini', nextChapter: 'HALAMAN KITA BERIKUTNYA', thanks: 'TERIMA KASIH SUDAH MEMBACA', replay: 'Baca lagi', dear: 'Untuk', pause: 'Jeda lagu', play: 'Putar lagu', unavailable: 'Lagu tidak dapat diputar', littleSecret: 'one photo, one little secret',
+    puzzleEyebrow: 'HADIAH KECIL UNTUKMU', puzzleTitle: 'Lengkapi fotonya,<br/>lalu buka hadiah kecilmu.', installed: 'KEPING TERPASANG', assist: 'Buka tanpa menggeser', complete: 'fotonya sudah lengkap', openStory: 'Buka ceritanya', musicError: 'Lagu belum dapat diputar. Ceritanya tetap bisa dibuka.', for: 'untuk', from: 'dari', open: 'Buka ceritanya', tap: 'ketuk untuk memulai cerita', storyBy: 'sebuah cerita kecil dari', previous: 'Halaman sebelumnya', next: 'Halaman berikutnya', deepBreath: 'okay, tarik napas dulu...', choose: 'Pilih jawabanmu, ya.', end: 'AKHIR... ATAU AWAL BARU?', goodStory: 'ternyata, kita bisa menjadi cerita yang baik', courage: 'butuh keberanian untuk mengatakan ini', nextChapter: 'HALAMAN KITA BERIKUTNYA', thanks: 'TERIMA KASIH SUDAH MEMBACA', replay: 'Baca lagi', dear: 'Untuk', pause: 'Jeda lagu', play: 'Putar lagu', unavailable: 'Lagu tidak dapat diputar', answerSaved: 'CATATAN JAWABAN', answerLabel: 'JAWABANMU', downloadCard: 'Unduh kartu', shareCard: 'Bagikan kartu', cardStatus: 'Kartu jawaban siap dibagikan.', cardFailed: 'Kartu belum berhasil dibuat. Coba lagi.', littleSecret: 'one photo, one little secret',
   },
   en: {
-    soundtrack: 'OUR SOUNDTRACK', puzzleEyebrow: 'A LITTLE GIFT FOR YOU', puzzleTitle: 'Complete the picture,<br/>then open your little gift.', installed: 'PIECES IN PLACE', assist: 'Open without dragging', complete: 'the picture is complete', openStory: 'Open the story', musicError: 'The song could not start, but the story is ready.', for: 'for', from: 'from', open: 'Open the story', tap: 'tap to begin the story', storyBy: 'a little story by', previous: 'Previous page', next: 'Next page', deepBreath: 'okay, deep breath...', choose: 'Choose your answer.', end: 'THE END... OR THE BEGINNING?', goodStory: 'turns out, we are a good story', courage: 'it took courage to say it', nextChapter: 'OUR NEXT CHAPTER', thanks: 'THANK YOU FOR READING', replay: 'Read again', dear: 'Dear', pause: 'Pause song', play: 'Play song', unavailable: 'Song unavailable', littleSecret: 'one photo, one little secret',
+    puzzleEyebrow: 'A LITTLE GIFT FOR YOU', puzzleTitle: 'Complete the picture,<br/>then open your little gift.', installed: 'PIECES IN PLACE', assist: 'Open without dragging', complete: 'the picture is complete', openStory: 'Open the story', musicError: 'The song could not start, but the story is ready.', for: 'for', from: 'from', open: 'Open the story', tap: 'tap to begin the story', storyBy: 'a little story by', previous: 'Previous page', next: 'Next page', deepBreath: 'okay, deep breath...', choose: 'Choose your answer.', end: 'THE END... OR THE BEGINNING?', goodStory: 'turns out, we are a good story', courage: 'it took courage to say it', nextChapter: 'OUR NEXT CHAPTER', thanks: 'THANK YOU FOR READING', replay: 'Read again', dear: 'Dear', pause: 'Pause song', play: 'Play song', unavailable: 'Song unavailable', answerSaved: 'A LITTLE ANSWER', answerLabel: 'YOUR ANSWER', downloadCard: 'Download card', shareCard: 'Share card', cardStatus: 'Your answer card is ready to share.', cardFailed: 'The card could not be created. Please try again.', littleSecret: 'one photo, one little secret',
   },
 };
 Object.assign(fixedCopy.id, { coverSection: 'Sampul komik', memorySection: 'Awal cerita', reasonsSection: 'Tiga alasan', letterSection: 'Surat singkat', questionSection: 'Pertanyaan terakhir', resultSection: 'Akhir cerita', pageNavigation: 'Navigasi halaman', puzzlePhoto: 'Foto pembuka untuk', puzzlePiece: 'Pasangkan keping foto', storyCharacters: 'Ilustrasi cerita' });
@@ -75,6 +80,7 @@ const state = {
   noDodges: 0,
   musicError: false,
 };
+const NO_DODGE_LIMIT = 10;
 const totalPages = 5;
 const solvedPieces = new Set();
 const PUZZLE_PATH = 'M80 60H155C150 35 168 18 193 18C218 18 236 35 231 60H320V135C345 130 362 148 362 173C362 198 345 216 320 211V300H231C236 325 218 342 193 342C168 342 150 325 155 300H80V211C55 216 38 198 38 173C38 148 55 130 80 135Z';
@@ -92,13 +98,15 @@ const icon = (name) => {
     muted: '<path d="M9 18V5l11-2v13M9 9l11-2"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/><path d="M3 3l18 18"/>',
     heart: '<path d="M20.6 5.6a5 5 0 0 0-7.1 0L12 7.1l-1.5-1.5a5 5 0 0 0-7.1 7.1L12 21l8.6-8.3a5 5 0 0 0 0-7.1Z"/>',
     replay: '<path d="M4 11a8 8 0 1 1 2.4 6M4 5v6h6"/>',
+    download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+    share: '<path d="M12 16V3m-5 5 5-5 5 5M5 13v6h14v-6"/>',
   };
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]}</svg>`;
 };
 
 function header() {
   const musicLabel = state.musicError ? t('unavailable') : audio.paused ? t('play') : t('pause');
-  return `<header class="topbar"><span class="topbar__episode"><small>${t('soundtrack')}</small>${escape(gift.music.title)} · ${escape(gift.music.artist)}</span><button class="music-toggle ${audio.paused ? '' : 'is-playing'}" data-action="music" aria-label="${musicLabel}" title="${musicLabel}">${icon(audio.paused ? 'music' : 'muted')}</button></header>`;
+  return `<header class="topbar"><button class="music-toggle ${audio.paused ? 'is-muted' : 'is-playing'}" data-action="music" aria-label="${musicLabel}" title="${musicLabel}">${icon(audio.paused ? 'muted' : 'music')}</button></header>`;
 }
 
 function fallbackArtwork() {
@@ -149,27 +157,46 @@ function memory() {
 }
 
 function reasons() {
-  return `<section class="page page--reasons" aria-label="Tiga alasan"><span class="eyebrow">${escape(gift.reasons.label)}</span><h2>${escape(gift.reasons.title)}</h2><div class="reason-grid">${gift.reasons.items.map((item, index) => `<article class="reason"><span class="reason__number">0${index + 1}</span><p>${escape(item)}</p></article>`).join('')}</div><div class="reason-photo">${photoContent(gift.reasons.photo, 'Foto dua orang di bawah langit senja')}<span>little moments, big feelings</span></div><p class="reason-note">${escape(gift.reasons.note)}</p>${pager()}</section>`;
+  return `<section class="page page--reasons" aria-label="Tiga alasan"><span class="eyebrow">${escape(gift.reasons.label)}</span><h2>${escape(gift.reasons.title)}</h2><div class="reason-grid">${gift.reasons.items.map((item, index) => `<article class="reason" style="--reason-index:${index}"><span class="reason__number">0${index + 1}</span><p>${escape(item)}</p></article>`).join('')}</div><div class="reason-photo">${photoContent(gift.reasons.photo, 'Foto dua orang di bawah langit senja')}<span>little moments, big feelings</span></div><p class="reason-note">${escape(gift.reasons.note)}</p>${pager()}</section>`;
 }
 
 function letter() {
-  return `<section class="page page--letter" aria-label="Surat singkat"><span class="eyebrow">${escape(gift.letter.label)}</span><div class="letter__heart">${icon('heart')}</div><h2>${escape(gift.letter.title)}</h2><div class="letter-paper"><span class="letter-paper__dear">${t('dear')} ${escape(gift.recipient)},</span><p>${escape(gift.letter.body)}</p><div class="letter-paper__signoff">${escape(gift.letter.signoff)}<strong>${escape(gift.sender)}</strong></div></div>${pager()}</section>`;
+  return `<section class="page page--letter" aria-label="Surat singkat"><span class="eyebrow">${escape(gift.letter.label)}</span><h2>${escape(gift.letter.title)}</h2><div class="letter-paper"><span class="letter-paper__dear">${t('dear')} ${escape(gift.recipient)},</span><p>${escape(gift.letter.body)}</p><div class="letter-paper__signoff">${escape(gift.letter.signoff)}<strong>${escape(gift.sender)}</strong></div></div>${pager()}</section>`;
 }
 
 function noStyle() {
-  const positions = [[52, 10], [11, 82], [52, 82], [52, 10]];
-  const [left, top] = positions[Math.min(state.noDodges, 3)];
+  const positions = [[52, 10], [11, 82], [52, 82], [11, 10], [52, 48], [11, 48], [52, 10], [11, 82], [52, 82], [11, 10], [52, 48]];
+  const [left, top] = positions[Math.min(state.noDodges, positions.length - 1)];
   return `left:${left}%;top:${top}px`;
 }
 
 function question() {
   if (state.outcome) return result();
-  return `<section class="page page--question" aria-label="Pertanyaan terakhir"><span class="eyebrow">${escape(gift.question.label)}</span><div class="question__burst" aria-hidden="true">✳</div><div class="question__bubble"><span class="hand-caption">${t('deepBreath')}</span><h2>${escape(gift.question.title)}</h2><p class="question__signature">— ${escape(gift.sender)}</p></div><div class="answer-area"><button class="answer-yes" data-action="yes">${escape(gift.question.yes)} ${icon('heart')}</button><button class="answer-no" data-action="no" style="${noStyle()}">${escape(gift.question.no)}</button></div><p class="answer-hint" aria-live="polite">${t('choose')}</p>${pager()}</section>`;
+  return `<section class="page page--question" aria-label="Pertanyaan terakhir"><span class="eyebrow">${escape(gift.question.label)}</span><div class="question__bubble"><span class="hand-caption">${t('deepBreath')}</span><h2>${escape(gift.question.title)}</h2><p class="question__signature">— ${escape(gift.sender)}</p></div><div class="answer-area"><button class="answer-yes" data-action="yes">${escape(gift.question.yes)} ${icon('heart')}</button><button class="answer-no" data-action="no" style="${noStyle()}">${escape(gift.question.no)}</button></div><p class="answer-hint" aria-live="polite">${t('choose')}</p>${pager()}</section>`;
 }
 
 function result() {
   const yes = state.outcome === 'yes';
-  return `<section class="page page--result ${yes ? 'page--yes' : ''}" aria-label="Akhir cerita"><span class="eyebrow">${t('end')}</span><div class="result__art" aria-hidden="true">${yes ? '♡' : '✳'}</div><span class="hand-caption">${yes ? t('goodStory') : t('courage')}</span><h2>${escape(yes ? gift.question.yesTitle : gift.question.noTitle)}</h2><p>${escape(yes ? gift.question.yesBody : gift.question.noBody)}</p><div class="result__stamp">${yes ? t('nextChapter') : t('thanks')}</div><button class="secondary" data-action="replay">${t('replay')} ${icon('replay')}</button></section>`;
+  const body = yes ? gift.question.yesBody : gift.question.noBody;
+  const answer = yes ? gift.question.yes : gift.question.no;
+  return `<section class="page page--result ${yes ? 'page--yes' : 'page--no'}" aria-label="Akhir cerita">
+    <span class="eyebrow">${t('end')}</span>
+    <div class="answer-printer ${yes ? 'is-positive' : ''}">
+      <div class="answer-printer__machine"><span>CRUSH NOTE · MINI PRESS</span><i aria-hidden="true"></i><div class="answer-printer__slot"></div></div>
+      <article class="answer-ticket">
+        <span class="answer-ticket__eyebrow">${t('answerSaved')}</span>
+        <div class="answer-ticket__rule"></div>
+        <div class="answer-ticket__answer"><small>${t('answerLabel')}</small><strong>${escape(answer)}</strong></div>
+        <p>${escape(body)}</p>
+      </article>
+    </div>
+    <div class="answer-card-actions">
+      <button class="secondary" data-action="download-answer">${icon('download')}${t('downloadCard')}</button>
+      <button class="primary" data-action="share-answer">${icon('share')}${t('shareCard')}</button>
+    </div>
+    <p class="answer-export-status" aria-live="polite"></p>
+    <button class="result-replay" data-action="replay">${t('replay')} ${icon('replay')}</button>
+  </section>`;
 }
 
 function pager() {
@@ -198,7 +225,7 @@ function render() {
   app.querySelectorAll('[data-action]').forEach((button) => button.addEventListener('click', () => act(button.dataset.action)));
   const noButton = app.querySelector('.answer-no');
   noButton?.addEventListener('pointerenter', (event) => {
-    if (event.pointerType === 'mouse' && state.noDodges < 3) dodge();
+    if (event.pointerType === 'mouse' && state.noDodges < NO_DODGE_LIMIT) dodge();
   });
   window.scrollTo(0, 0);
 }
@@ -272,12 +299,116 @@ function bindPuzzle() {
   });
 }
 
+function wrapCanvasLines(context, text, x, y, maxWidth, lineHeight, maxLines = 5) {
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  let line = '';
+  let lines = 0;
+  for (const word of words) {
+    const candidate = line ? line + ' ' + word : word;
+    if (context.measureText(candidate).width > maxWidth && line) {
+      context.fillText(line, x, y);
+      y += lineHeight;
+      lines += 1;
+      line = word;
+      if (lines >= maxLines - 1) break;
+    } else line = candidate;
+  }
+  if (line && lines < maxLines) context.fillText(line, x, y);
+  return y + lineHeight;
+}
+
+async function answerCardBlob() {
+  if (document.fonts?.ready) await document.fonts.ready;
+  const yes = state.outcome === 'yes';
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1440;
+  const context = canvas.getContext('2d');
+  if (!context) throw new Error('Canvas unavailable');
+  const colors = activeTheme.colors;
+  context.fillStyle = colors.canvas;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = colors.halftone || colors.line;
+  for (let y = 24; y < canvas.height; y += 34) for (let x = 24; x < canvas.width; x += 34) {
+    context.globalAlpha = .2;
+    context.beginPath(); context.arc(x, y, 2.2, 0, Math.PI * 2); context.fill();
+  }
+  context.globalAlpha = 1;
+  const x = 82, y = 105, width = 916, height = 1230;
+  context.fillStyle = colors.ink;
+  context.fillRect(x + 18, y + 22, width, height);
+  context.fillStyle = colors.paper;
+  context.fillRect(x, y, width, height);
+  context.strokeStyle = colors.accent;
+  context.lineWidth = 3;
+  context.setLineDash([12, 10]);
+  context.strokeRect(x + 24, y + 24, width - 48, height - 48);
+  context.setLineDash([]);
+
+  const center = canvas.width / 2;
+  context.textAlign = 'center';
+  context.fillStyle = colors.accentDeep;
+  context.font = '700 24px "Balsamiq Sans", sans-serif';
+  context.fillText(t('answerSaved'), center, y + 130);
+  context.strokeStyle = colors.line;
+  context.lineWidth = 3;
+  context.beginPath(); context.moveTo(x + 105, y + 175); context.lineTo(x + width - 105, y + 175); context.stroke();
+
+  const body = yes ? gift.question.yesBody : gift.question.noBody;
+  const answer = yes ? gift.question.yes : gift.question.no;
+  const answerY = y + 245;
+  context.fillStyle = colors.secondary;
+  context.fillRect(x + 106, answerY, width - 212, 180);
+  context.fillStyle = colors.accentDeep;
+  context.font = '700 21px "Balsamiq Sans", sans-serif';
+  context.fillText(t('answerLabel'), center, answerY + 48);
+  context.fillStyle = colors.ink;
+  context.font = '700 48px "Balsamiq Sans", sans-serif';
+  wrapCanvasLines(context, answer, center, answerY + 112, width - 270, 55, 2);
+
+  context.textAlign = 'left';
+  context.fillStyle = colors.inkSoft;
+  context.font = '400 34px "Patrick Hand", sans-serif';
+  wrapCanvasLines(context, body, x + 120, answerY + 270, width - 240, 42, 10);
+  return new Promise((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('PNG export failed')), 'image/png'));
+}
+
+function downloadAnswerBlob(blob) {
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.download = 'crush-note-jawaban.png';
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+async function exportAnswer(action) {
+  const yes = state.outcome === 'yes';
+  const status = app.querySelector('.answer-export-status');
+  if (status) status.textContent = '…';
+  try {
+    const blob = await answerCardBlob();
+    const file = new File([blob], 'crush-note-answer.png', { type: 'image/png' });
+    if (action === 'share' && navigator.share && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({ title: 'Crush Note · ' + t('answerSaved'), text: `${t('answerLabel')}: ${yes ? gift.question.yes : gift.question.no}\n\n${yes ? gift.question.yesBody : gift.question.noBody}`, files: [file] });
+      if (status) status.textContent = t('cardStatus');
+    } else {
+      downloadAnswerBlob(blob);
+      if (status) status.textContent = t('cardStatus');
+    }
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') { if (status) status.textContent = ''; return; }
+    if (status) status.textContent = t('cardFailed');
+  }
+}
+
 function act(action) {
   if (action === 'music') {
     if (audio.paused) audio.play().then(() => { state.musicError = false; render(); }).catch(() => { state.musicError = true; render(); });
     else { audio.pause(); render(); }
     return;
   }
+  if (action === 'download-answer' || action === 'share-answer') { exportAnswer(action === 'share-answer' ? 'share' : 'download'); return; }
   if (action === 'puzzle-assist') {
     const pieces = [...document.querySelectorAll('.puzzle-piece')];
     pieces.forEach((piece) => {
@@ -303,7 +434,7 @@ function act(action) {
   if (action === 'next') state.page = Math.min(totalPages - 1, state.page + 1);
   if (action === 'prev') state.page = Math.max(0, state.page - 1);
   if (action === 'no') {
-    if (state.noDodges < 3) { dodge(); return; }
+    if (state.noDodges < NO_DODGE_LIMIT) { dodge(); return; }
     state.outcome = 'no';
   }
   if (action === 'yes') state.outcome = 'yes';

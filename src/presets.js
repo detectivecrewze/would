@@ -21,9 +21,9 @@ export const presets = {
       { name: 'Romantis', values: { label: 'CHAPTER 03 / DARI HATI', title: 'Ada perasaan yang terlalu baik untuk terus disimpan.', body: 'Di antara banyak pertemuan biasa, kehadiranmu menjadi sesuatu yang selalu ingin kuingat. Jika kamu bersedia, aku ingin mengenalmu bukan hanya sebagai bagian dari hari ini, tetapi juga dari hari-hari berikutnya.', signoff: 'dengan semua keberanian yang kupunya,' } },
     ],
     question: [
-      { name: 'Jalan bareng', values: { label: 'THE FINAL PANEL', title: 'Mau nggak kita coba jalan bareng, kali ini sebagai kita?', yes: 'Iya, mau!', no: 'Nggak dulu', yesTitle: 'Yay! Ini awal cerita kita.', yesBody: 'Sekarang kita punya alasan baru untuk tersenyum setiap kali ingat halaman ini.', noTitle: 'Terima kasih sudah jujur.', noBody: 'Terima kasih sudah membaca ceritaku sampai halaman terakhir.' } },
-      { name: 'Kenal lebih jauh', values: { label: 'ONE LAST QUESTION', title: 'Boleh nggak aku mengenalmu lebih jauh dari sekarang?', yes: 'Boleh banget', no: 'Belum dulu', yesTitle: 'Satu halaman baru resmi dimulai.', yesBody: 'Aku akan menikmati proses mengenalmu, satu cerita kecil setiap harinya.', noTitle: 'Aku mengerti.', noBody: 'Terima kasih sudah memberikan jawaban yang jujur.' } },
-      { name: 'Date pertama', values: { label: 'THE DATE PROPOSAL', title: 'Mau pergi date kecil bersamaku?', yes: 'Ayo!', no: 'Lain kali', yesTitle: 'It’s a date!', yesBody: 'Aku akan menyiapkan hari kecil yang pantas kita ingat.', noTitle: 'Tidak apa-apa.', noBody: 'Terima kasih sudah membaca semuanya sampai akhir.' } },
+      { name: 'Jalan bareng', values: { label: 'THE FINAL PANEL', title: 'Mau nggak kita coba jalan bareng, kali ini sebagai kita?', yes: 'Iya, mau!', no: 'Nggak dulu', yesBody: 'Sekarang kita punya alasan baru untuk tersenyum setiap kali ingat halaman ini.', noBody: 'Terima kasih sudah membaca ceritaku sampai halaman terakhir.' } },
+      { name: 'Kenal lebih jauh', values: { label: 'ONE LAST QUESTION', title: 'Boleh nggak aku mengenalmu lebih jauh dari sekarang?', yes: 'Boleh banget', no: 'Belum dulu', yesBody: 'Aku akan menikmati proses mengenalmu, satu cerita kecil setiap harinya.', noBody: 'Terima kasih sudah memberikan jawaban yang jujur.' } },
+      { name: 'Date pertama', values: { label: 'THE DATE PROPOSAL', title: 'Mau pergi date kecil bersamaku?', yes: 'Ayo!', no: 'Lain kali', yesBody: 'Aku akan menyiapkan hari kecil yang pantas kita ingat.', noBody: 'Terima kasih sudah membaca semuanya sampai akhir.' } },
     ],
   },
   en: {
@@ -48,9 +48,9 @@ export const presets = {
       { name: 'Romantic', values: { label: 'CHAPTER 03 / FROM THE HEART', title: 'Some feelings are too lovely to keep hidden.', body: 'Among so many ordinary meetings, your presence became something I always want to remember. If you are willing, I would love to know you not only as part of today, but also of the days ahead.', signoff: 'with all the courage I have,' } },
     ],
     question: [
-      { name: 'Go out together', values: { label: 'THE FINAL PANEL', title: 'Would you like to go out with me and see where this story goes?', yes: 'Yes, I would!', no: 'Not yet', yesTitle: 'Yay! This is our first page.', yesBody: 'Now we have a new reason to smile whenever we remember this little comic.', noTitle: 'Thank you for being honest.', noBody: 'Thank you for reading my story until its final page.' } },
-      { name: 'Know you better', values: { label: 'ONE LAST QUESTION', title: 'May I get to know you a little more than I do now?', yes: 'I would like that', no: 'Not yet', yesTitle: 'A new page has officially begun.', yesBody: 'I will enjoy knowing you, one small story at a time.', noTitle: 'I understand.', noBody: 'Thank you for giving me an honest answer.' } },
-      { name: 'First date', values: { label: 'THE DATE PROPOSAL', title: 'Would you go on a little date with me?', yes: 'Let’s go!', no: 'Maybe later', yesTitle: 'It’s a date!', yesBody: 'I will prepare a little day worth remembering.', noTitle: 'That is okay.', noBody: 'Thank you for staying until the final page.' } },
+      { name: 'Go out together', values: { label: 'THE FINAL PANEL', title: 'Would you like to go out with me and see where this story goes?', yes: 'Yes, I would!', no: 'Not yet', yesBody: 'Now we have a new reason to smile whenever we remember this little comic.', noBody: 'Thank you for reading my story until its final page.' } },
+      { name: 'Know you better', values: { label: 'ONE LAST QUESTION', title: 'May I get to know you a little more than I do now?', yes: 'I would like that', no: 'Not yet', yesBody: 'I will enjoy knowing you, one small story at a time.', noBody: 'Thank you for giving me an honest answer.' } },
+      { name: 'First date', values: { label: 'THE DATE PROPOSAL', title: 'Would you go on a little date with me?', yes: 'Let’s go!', no: 'Maybe later', yesBody: 'I will prepare a little day worth remembering.', noBody: 'Thank you for staying until the final page.' } },
     ],
   },
 };

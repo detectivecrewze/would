@@ -253,7 +253,7 @@ async function handle(request, env) {
       env.CRUSH_NOTE_KV.put("project-meta:" + id, JSON.stringify(meta)),
     ]);
     const appUrl = (env.PUBLIC_APP_URL || request.headers.get("origin") || url.origin).replace(/\/$/, "");
-    return response(request, env, { ok: true, project: meta, giftUrl: appUrl + "/?gift=" + encodeURIComponent(id) });
+    return response(request, env, { ok: true, project: meta, giftUrl: appUrl + "/share/" + encodeURIComponent(id) });
   }
 
   const publicMatch = pathname.match(/^\/api\/public\/gifts\/([^/]+)$/);
