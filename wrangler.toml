@@ -4,14 +4,13 @@ compatibility_date = "2026-01-31"
 workers_dev = true
 
 [vars]
-ALLOWED_ORIGINS = "https://would.vercel.app,http://127.0.0.1:5179,http://localhost:5179,http://127.0.0.1:5180,http://localhost:5180"
+ALLOWED_ORIGINS = "https://would.for-you-always.my.id,http://127.0.0.1:5179,http://localhost:5179,http://127.0.0.1:5180,http://localhost:5180"
+PUBLIC_APP_URL = "https://would.for-you-always.my.id"
 
-# Replace this local placeholder with a new, dedicated Crush Note KV namespace ID before deploy.
 [[kv_namespaces]]
 binding = "CRUSH_NOTE_KV"
 id = "cad407afd78443e5bdccd74407e6d825"
 
-# Shared bucket used by other gift projects. Crush Note writes only under crush-note/.
 [[r2_buckets]]
 binding = "MEDIA"
 bucket_name = "valentine-upload"
