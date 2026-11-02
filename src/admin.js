@@ -112,8 +112,7 @@ function renderProjects() {
     deleteGift.addEventListener("click", () => {
       deleteTargetId = project.id;
       document.querySelector("#delete-target").textContent = project.id;
-      document.querySelector("#delete-confirm-input").value = "";
-      document.querySelector("#confirm-delete").disabled = true;
+      document.querySelector("#confirm-delete").disabled = false;
       deleteModal.showModal();
     });
     actions.append(copyStudio, openStudio, deleteGift);
@@ -199,15 +198,11 @@ document.querySelector("#confirm-create").addEventListener("click", async (event
   }
 });
 
-const deleteInput = document.querySelector("#delete-confirm-input");
-deleteInput.addEventListener("input", () => {
-  document.querySelector("#confirm-delete").disabled = deleteInput.value.trim() !== deleteTargetId;
-});
 document.querySelector("#close-delete-modal").addEventListener("click", () => deleteModal.close());
 document.querySelector("#cancel-delete").addEventListener("click", () => deleteModal.close());
 deleteModal.addEventListener("click", (event) => { if (event.target === deleteModal) deleteModal.close(); });
 document.querySelector("#confirm-delete").addEventListener("click", async (event) => {
-  if (!deleteTargetId || deleteInput.value.trim() !== deleteTargetId) return;
+  if (!deleteTargetId) return;
   const button = event.currentTarget;
   button.disabled = true;
   button.textContent = "Menghapus…";
@@ -224,7 +219,7 @@ document.querySelector("#confirm-delete").addEventListener("click", async (event
     notify(error.message || "Gift belum dapat dihapus.");
   } finally {
     button.textContent = "Hapus permanen";
-    button.disabled = true;
+    button.disabled = !deleteTargetId;
   }
 });
 
