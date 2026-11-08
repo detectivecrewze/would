@@ -22,6 +22,8 @@ if (giftToLoad) {
     if (requestedGiftId) giftLoadError = error.message || 'Gift could not be loaded.';
   }
 }
+const previewTheme = previewMode ? searchParams.get('theme') : null;
+if (['classic', 'strawberry', 'matcha', 'blue'].includes(previewTheme)) gift = { ...gift, theme: previewTheme };
 const audio = new Audio();
 audio.preload = 'none';
 audio.loop = true;

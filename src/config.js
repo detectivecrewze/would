@@ -1,6 +1,5 @@
 export const API_BASE = (() => {
   if (window.CRUSH_NOTE_API_BASE) return window.CRUSH_NOTE_API_BASE.replace(/\/$/, "");
-  if (["localhost", "127.0.0.1"].includes(location.hostname)) return "http://127.0.0.1:8787";
   return "https://crush-note-api.aldoramadhan16.workers.dev";
 })();
 

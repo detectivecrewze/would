@@ -46,6 +46,14 @@ async function digest(value) {
   return [...new Uint8Array(hash)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
+async function orderStudioToken(orderId, secret) {
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(orderId.toLowerCase()));
+  return [...new Uint8Array(signature)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 function randomToken() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
   return [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("");
@@ -115,6 +123,55 @@ async function handle(request, env) {
       r2: Boolean(env.MEDIA),
       mode: env.ENVIRONMENT || "local-or-production",
     });
+  }
+
+  if (method === "POST" && pathname === "/api/integrations/orders") {
+    const expected = String(env.CRUSH_NOTE_INGEST_SECRET || "");
+    const supplied = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+    if (!expected || !equalSecret(supplied, expected)) return error(request, env, "Akses integrasi order tidak valid.", 401);
+    let body;
+    try { body = await readJson(request, 16 * 1024); } catch (cause) { return error(request, env, cause.message || "JSON tidak valid."); }
+    const orderId = String(body?.orderId || "").trim();
+    if (!/^[A-Za-z0-9_-]{4,100}$/.test(orderId)) return error(request, env, "Order ID tidak valid.");
+    if (!env.CRUSH_NOTE_KV) return error(request, env, "KV belum tersedia.", 503);
+
+    const orderHash = await digest(orderId.toLowerCase());
+    const id = "crush-note-" + orderHash.slice(0, 24);
+    const idempotencyKey = "order-idempotency:" + orderHash;
+    const existing = await env.CRUSH_NOTE_KV.get(idempotencyKey, "json");
+    const appUrl = (env.PUBLIC_APP_URL || url.origin).replace(/\/$/, "");
+    const token = await orderStudioToken(orderId, expected);
+    if (existing?.projectId === id) {
+      return response(request, env, {
+        ok: true, projectId: id, studioUrl: appUrl + "/studio/?project=" + encodeURIComponent(id) + "&token=" + encodeURIComponent(token),
+        giftUrl: appUrl + "/share/" + encodeURIComponent(id), idempotent: true,
+      });
+    }
+
+    const now = new Date().toISOString();
+    const meta = { id, status: "draft", createdAt: now, updatedAt: now, publishedAt: null, orderId };
+    const project = {
+      id, locale: body.locale === "en" ? "en" : "id", theme: "classic",
+      sender: "", recipient: "",
+      puzzle: { photo: "" },
+      cover: { kicker: "", title: "", hint: "", photo: "" },
+      memory: { label: "", title: "", body: "", caption: "", photo: "" },
+      reasons: { label: "", title: "", items: ["", "", ""], note: "", photo: "" },
+      letter: { label: "", title: "", body: "", signoff: "" },
+      question: { label: "", title: "", yes: "", no: "", yesBody: "", noBody: "" },
+      music: { title: "", artist: "", coverUrl: "", url: "", source: "library" },
+    };
+    const studioUrl = appUrl + "/studio/?project=" + encodeURIComponent(id) + "&token=" + encodeURIComponent(token);
+    const giftUrl = appUrl + "/share/" + encodeURIComponent(id);
+    const priorMeta = await projectMeta(env, id);
+    if (priorMeta) return error(request, env, "Project dengan Order ID ini sudah ada tetapi metadata order tidak ditemukan.", 409);
+    await Promise.all([
+      env.CRUSH_NOTE_KV.put("project-meta:" + id, JSON.stringify(meta)),
+      env.CRUSH_NOTE_KV.put("project-draft:" + id, JSON.stringify(project)),
+      digest(token).then((hash) => env.CRUSH_NOTE_KV.put("studio-token:" + id, hash)),
+      env.CRUSH_NOTE_KV.put(idempotencyKey, JSON.stringify({ projectId: id, createdAt: now })),
+    ]);
+    return response(request, env, { ok: true, projectId: id, studioUrl, giftUrl }, 201);
   }
 
   if (method === "GET" && pathname === "/api/admin/projects") {

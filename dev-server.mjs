@@ -30,7 +30,7 @@ createServer(async (request, response) => {
   if (shareMatch) {
     const id = shareMatch[1];
     try {
-      const result = await fetch('http://127.0.0.1:8787/api/public/gifts/' + encodeURIComponent(id));
+      const result = await fetch('https://crush-note-api.aldoramadhan16.workers.dev/api/public/gifts/' + encodeURIComponent(id));
       const payload = await result.json();
       if (!result.ok || !payload.project) throw new Error('Gift is unavailable');
       const project = payload.project;

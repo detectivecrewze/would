@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "node dev-server.mjs",
+    "start": "node dev-server.mjs",
     "dev:site": "node dev-server.mjs",
     "dev:worker": "wrangler dev --local --port 8787",
     "check:worker": "node --check worker/index.js"

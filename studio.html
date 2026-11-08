@@ -118,9 +118,20 @@
 
           <section class="editor-step" data-panel="4" hidden>
             <div class="section-heading"><span>STEP 05</span><h1>Gift siap dibagikan.</h1><p>Pilih cara yang paling nyaman: kirim link langsung atau unduh barcode berbentuk love stamp.</p></div>
-            <div class="publish-grid">
-              <section class="share-card"><span>LINK GIFT</span><h2>Kirim link langsung</h2><p>Gunakan alamat final gift setelah website dipublikasikan. Untuk preview lokal, alamat di bawah otomatis memakai halaman ini.</p><label class="field"><span>Alamat gift</span><input id="share-url" type="url" /></label><button class="button button--primary" id="copy-link" type="button">Salin link</button></section>
-              <section class="barcode-card"><div class="barcode-paper" id="barcode-paper"><div id="barcode-qr" role="img" aria-label="Heart-shaped gift QR code"></div><p>SCAN TO OPEN THE STORY</p></div><button class="button button--primary" id="download-barcode" type="button">Unduh barcode PNG</button></section>
+            <div class="final-review-layout">
+              <section class="final-full-preview" aria-label="Preview lengkap Confession Page">
+                <header class="final-full-preview__head">
+                  <span><small>LIVE PREVIEW</small><strong>GIFT LENGKAP</strong><em>Coba seluruh alur persis seperti yang akan dilihat penerima.</em></span>
+                  <button type="button" id="refresh-final-preview" aria-label="Muat ulang preview lengkap"><span aria-hidden="true">↻</span><b>Muat ulang</b></button>
+                </header>
+                <div class="final-full-preview__screen"><iframe id="final-gift-preview" title="Preview lengkap Confession Page" loading="eager"></iframe></div>
+              </section>
+              <div class="final-share-column">
+                <div class="publish-grid">
+                  <section class="share-card"><span>LINK GIFT</span><h2>Kirim link langsung</h2><p>Gunakan alamat final gift setelah website dipublikasikan. Untuk preview lokal, alamat di bawah otomatis memakai halaman ini.</p><label class="field"><span>Alamat gift</span><input id="share-url" type="url" /></label><button class="button button--primary" id="copy-link" type="button">Salin link</button></section>
+                  <section class="barcode-card"><div class="barcode-paper" id="barcode-paper"><div id="barcode-qr" role="img" aria-label="Heart-shaped gift QR code"></div><p>SCAN TO OPEN THE STORY</p></div><button class="button button--primary" id="download-barcode" type="button">Unduh barcode PNG</button></section>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -157,6 +168,40 @@
     </dialog>
     <div class="studio-toast" id="studio-toast" role="status" aria-live="polite"></div>
     <script src="/assets/vendor/qrcode.min.js"></script>
-    <script type="module" src="/src/studio.js"></script>
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const projectId = params.get('project') || '';
+        const token = params.get('token') || '';
+        const isLocalHost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        const explicitLocalDemo = isLocalHost && params.get('demo') === '1';
+        const hasStudioAccess = Boolean(projectId && token) || explicitLocalDemo;
+
+        if (!hasStudioAccess) {
+          document.querySelector('.studio-shell')?.remove();
+          document.querySelector('#preset-preview-dialog')?.remove();
+          document.querySelector('#studio-toast')?.remove();
+
+          const gate = document.createElement('main');
+          gate.className = 'studio-access-gate';
+          gate.innerHTML = `
+            <section class="studio-access-card" aria-labelledby="studio-access-title">
+              <span class="studio-access-card__mark" aria-hidden="true">♡</span>
+              <p class="studio-access-card__eyebrow">STUDIO ACCESS</p>
+              <h1 id="studio-access-title">Link Studio tidak lengkap</h1>
+              <p>Buka Studio melalui link yang dikirim setelah pembayaran. Setiap link membawa ID project dan token akses khusus.</p>
+              <a href="/" class="studio-access-card__button">Kembali ke halaman gift</a>
+            </section>`;
+          document.body.appendChild(gate);
+          return;
+        }
+
+        document.body.dataset.studioAuth = explicitLocalDemo ? 'demo' : 'checking';
+        const studioScript = document.createElement('script');
+        studioScript.type = 'module';
+        studioScript.src = '/src/studio.js';
+        document.body.appendChild(studioScript);
+      })();
+    </script>
   </body>
 </html>

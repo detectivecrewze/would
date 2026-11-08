@@ -27,6 +27,23 @@ const studioToken = remoteParams.get('token') || '';
 let project = loadGift();
 let remoteProjectError = '';
 let remoteProjectReady = !remoteProjectId;
+
+function showStudioAccessError(message) {
+  document.body.dataset.studioAuth = 'invalid';
+  document.querySelector('.studio-shell')?.setAttribute('inert', '');
+  const gate = document.createElement('main');
+  gate.className = 'studio-access-gate studio-access-gate--overlay';
+  gate.innerHTML = `
+    <section class="studio-access-card" aria-labelledby="studio-access-error-title">
+      <span class="studio-access-card__mark" aria-hidden="true">♡</span>
+      <p class="studio-access-card__eyebrow">STUDIO ACCESS</p>
+      <h1 id="studio-access-error-title">Akses Studio tidak valid</h1>
+      <p>${message || 'Project tidak ditemukan atau token akses sudah tidak berlaku.'}</p>
+      <a href="/" class="studio-access-card__button">Kembali ke halaman gift</a>
+    </section>`;
+  document.body.appendChild(gate);
+}
+
 if (remoteProjectId) {
   try {
     if (!studioToken) throw new Error('Link Studio tidak memiliki token akses.');
@@ -35,9 +52,11 @@ if (remoteProjectId) {
     });
     project = result.project;
     remoteProjectReady = true;
+    document.body.dataset.studioAuth = 'ready';
     localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
   } catch (error) {
     remoteProjectError = error.message || 'Project tidak dapat dimuat dari Worker.';
+    showStudioAccessError(remoteProjectError);
   }
 }
 if (!giftThemes[project.theme]) project.theme = 'classic';
@@ -100,6 +119,7 @@ const studioTranslations = [
   ['LINK GIFT', 'GIFT LINK'], ['Kirim link langsung', 'Share the direct link'],
   ['Gunakan alamat final gift setelah website dipublikasikan. Untuk preview lokal, alamat di bawah otomatis memakai halaman ini.', 'Use the final gift address after publishing the website. In local preview, the address below points to this page.'],
   ['Alamat gift', 'Gift address'], ['Salin link', 'Copy link'], ['Unduh barcode PNG', 'Download barcode PNG'],
+  ['GIFT LENGKAP', 'COMPLETE GIFT'], ['Coba seluruh alur persis seperti yang akan dilihat penerima.', 'Try the complete flow exactly as your recipient will see it.'], ['Muat ulang', 'Refresh'],
   ['Puzzle', 'Puzzle'], ['Opening', 'Opening'], ['Ch. 1', 'Ch. 1'], ['Ch. 2', 'Ch. 2'], ['Surat', 'Letter'],
   ['Pilih bagian preview', 'Choose preview section'], ['Tutup preview', 'Close preview'], ['LIVE PREVIEW', 'LIVE PREVIEW'],
   ['Sebelumnya', 'Previous'], ['Lanjutkan', 'Continue'], ['Selesai & buka gift', 'Finish & open gift'],
@@ -123,6 +143,9 @@ function translateStaticUi() {
     ['aria-label', 'Pilih bagian preview', 'Choose preview section'],
     ['aria-label', 'Tutup preview', 'Close preview'],
     ['title', 'Preview Crush Note', 'Crush Note preview'],
+    ['title', 'Preview lengkap Confession Page', 'Complete Confession Page preview'],
+    ['aria-label', 'Preview lengkap Confession Page', 'Complete Confession Page preview'],
+    ['aria-label', 'Muat ulang preview lengkap', 'Refresh complete preview'],
     ['placeholder', 'Cari judul atau artis...', 'Search by title or artist...'],
   ];
   attributes.forEach(([name, id, en]) => {
@@ -370,6 +393,15 @@ function persist({ refresh = true } = {}) {
 
 function refreshPreview() {
   previewFrame.src = `/?preview=1&section=${currentPreview}&studio=${Date.now()}`;
+  if (currentStep === panels.length - 1) refreshFinalPreview();
+}
+
+function refreshFinalPreview() {
+  const frame = document.querySelector('#final-gift-preview');
+  if (!frame) return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
+  const params = new URLSearchParams({ preview: '1', studio: String(Date.now()) });
+  frame.src = `/?${params.toString()}`;
 }
 
 function showStep(index) {
@@ -379,8 +411,11 @@ function showStep(index) {
   document.querySelector('#previous-step').disabled = currentStep === 0;
   document.querySelector('#next-step').hidden = currentStep === panels.length - 1;
   document.querySelector('#finish-gift').hidden = currentStep !== panels.length - 1;
+  document.querySelector('.studio-layout').classList.toggle('is-final-step', currentStep === panels.length - 1);
   setPreview(stepPreview[currentStep]);
-  if (currentStep === 4) renderBarcode();
+  if (currentStep === 4) {
+    renderBarcode();
+  }
   scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
 
@@ -699,6 +734,7 @@ document.querySelector('#preset-modal-apply').addEventListener('click', () => {
   applyPreset(selection.scope, selection.index);
 });
 document.querySelector('#download-barcode').addEventListener('click', downloadBarcode);
+document.querySelector('#refresh-final-preview').addEventListener('click', refreshFinalPreview);
 
 steps.forEach((step) => step.addEventListener('click', () => showStep(Number(step.dataset.step))));
 document.querySelector('#previous-step').addEventListener('click', () => showStep(currentStep - 1));
