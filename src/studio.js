@@ -27,6 +27,7 @@ const studioToken = remoteParams.get('token') || '';
 let project = loadGift();
 let remoteProjectError = '';
 let remoteProjectReady = !remoteProjectId;
+let giftPublished = false;
 
 function showStudioAccessError(message) {
   document.body.dataset.studioAuth = 'invalid';
@@ -51,6 +52,7 @@ if (remoteProjectId) {
       headers: { 'X-Studio-Token': studioToken },
     });
     project = result.project;
+    giftPublished = result.status === 'published';
     remoteProjectReady = true;
     document.body.dataset.studioAuth = 'ready';
     localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
@@ -364,6 +366,10 @@ function announce(message) {
 }
 
 function persist({ refresh = true } = {}) {
+  if (giftPublished) {
+    giftPublished = false;
+    syncShareLink();
+  }
   saveState.textContent = ui().saving;
   saveState.classList.add('is-saving');
   clearTimeout(saveTimer);
@@ -587,12 +593,30 @@ function createHeartQr(url) {
 }
 
 function renderBarcode() {
-  const url = document.querySelector('#share-url').value.trim() || location.origin + '/';
   const target = document.querySelector('#barcode-qr');
   target.replaceChildren();
+  if (!giftPublished || !remoteProjectId) {
+    target.textContent = project.locale === 'en' ? 'Publish your gift to create its QR code.' : 'Publikasikan gift untuk membuat barcode.';
+    return;
+  }
+  const url = document.querySelector('#share-url').value;
   const svg = createHeartQr(url);
   if (svg) target.append(svg);
   else target.textContent = project.locale === 'en' ? 'QR code could not be generated.' : 'Barcode belum dapat dibuat.';
+}
+
+function syncShareLink() {
+  const shareUrl = document.querySelector('#share-url');
+  shareUrl.value = giftPublished && remoteProjectId
+    ? new URL('/share/' + encodeURIComponent(remoteProjectId), PUBLIC_APP_URL).toString()
+    : '';
+  shareUrl.placeholder = project.locale === 'en' ? 'Publish the gift first' : 'Publikasikan gift terlebih dahulu';
+  document.querySelector('#copy-link').disabled = !shareUrl.value;
+  document.querySelector('#download-barcode').disabled = !shareUrl.value;
+  document.querySelector('#share-description').textContent = shareUrl.value
+    ? (project.locale === 'en' ? 'This is your personal gift link. Share it after checking the final result.' : 'Ini link khusus gift kamu. Bagikan setelah mengecek hasil akhirnya.')
+    : (project.locale === 'en' ? 'Tap “Finish & open gift” below to publish. Your personal link and QR code will appear here.' : 'Tekan “Selesai & buka gift” di bawah untuk mempublikasikan. Link dan barcode khusus gift akan muncul di sini.');
+  renderBarcode();
 }
 
 function svgAsImage(svg) {
@@ -718,9 +742,9 @@ document.querySelector('#theme-options').addEventListener('click', (event) => {
   announce(project.locale === 'en' ? 'Gift colors changed to ' + selected + '.' : 'Warna gift diubah ke ' + selected + '.');
 });
 
-document.querySelector('#share-url').addEventListener('input', renderBarcode);
 document.querySelector('#copy-link').addEventListener('click', async () => {
   const url = document.querySelector('#share-url').value.trim();
+  if (!giftPublished || !url) return;
   try { await navigator.clipboard.writeText(url); announce(project.locale === 'en' ? 'Gift link copied.' : 'Link gift berhasil disalin.'); }
   catch { document.querySelector('#share-url').select(); announce('Pilih lalu salin link yang sudah ditandai.'); }
 });
@@ -742,7 +766,7 @@ document.querySelector('#next-step').addEventListener('click', () => showStep(cu
 document.querySelector('#finish-gift').addEventListener('click', async (event) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
   if (!remoteProjectId) {
-    window.open('/', '_blank', 'noopener');
+    window.open('/?preview=1', '_blank', 'noopener');
     return;
   }
   if (!remoteProjectReady) { announce(remoteProjectError || 'Project Worker belum siap.'); return; }
@@ -762,10 +786,8 @@ document.querySelector('#finish-gift').addEventListener('click', async (event) =
       method: 'POST',
       headers: { 'X-Studio-Token': studioToken },
     });
-    document.querySelector('#share-url').value = remoteProjectId
-  ? new URL('/?gift=' + encodeURIComponent(remoteProjectId), PUBLIC_APP_URL).toString()
-  : location.origin + '/';
-    renderBarcode();
+    giftPublished = true;
+    syncShareLink();
     if (giftTab) giftTab.location.href = published.giftUrl;
     saveState.textContent = project.locale === 'en' ? 'Published' : 'Gift dipublikasikan';
     announce(project.locale === 'en' ? 'Your gift is live.' : 'Gift berhasil dipublikasikan.');
@@ -788,13 +810,12 @@ window.addEventListener('storage', (event) => {
 });
 
 hydrateFields();
-document.querySelector('#share-url').value = `${location.origin}/`;
+syncShareLink();
 renderLanguageUi();
 if (remoteProjectError) {
   editor.inert = true;
   announce(remoteProjectError + ' Buka dashboard lalu masuk ulang ke Studio.');
 }
 loadPlaylist();
-renderBarcode();
 setMusicMode(project.music.source === 'upload' ? 'upload' : 'library');
 showStep(0);

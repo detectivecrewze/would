@@ -5,6 +5,9 @@ import { API_BASE } from './config.js';
 const app = document.querySelector('#app');
 const searchParams = new URLSearchParams(location.search);
 const requestedGiftId = searchParams.get('gift');
+if (requestedGiftId && /^[a-z0-9][a-z0-9-]{2,63}$/.test(requestedGiftId) && !searchParams.has('preview')) {
+  history.replaceState(null, '', '/share/' + encodeURIComponent(requestedGiftId));
+}
 const featuredGiftId = 'crush-note-9a199158';
 const previewMode = searchParams.has('preview');
 const giftToLoad = requestedGiftId || (!previewMode ? featuredGiftId : null);

@@ -19,7 +19,7 @@ function page({ title, description, image, giftUrl, redirectUrl }) {
 
 export default async function handler(request, response) {
   const id = request.query?.id || "";
-  const sendHtml = (status, html) => response.status(status).setHeader("content-type", "text/html; charset=utf-8").setHeader("cache-control", "public, max-age=0, s-maxage=300, stale-while-revalidate=3600").setHeader("x-content-type-options", "nosniff").send(html);
+  const sendHtml = (status, html) => response.status(status).setHeader("content-type", "text/html; charset=utf-8").setHeader("cache-control", "no-store").setHeader("x-content-type-options", "nosniff").send(html);
   if (!ID_PATTERN.test(id)) return sendHtml(404, page({
     title: "Crush Note — ada kejutan kecil untukmu",
     description: "Ada cerita kecil yang disiapkan khusus untukmu. Buka saat kamu siap menemukan kejutan di dalamnya.",
@@ -42,18 +42,19 @@ export default async function handler(request, response) {
     const description = english
       ? "Someone made a little story just for you. Open it when you are ready to discover the surprise."
       : "Ada cerita kecil yang disiapkan khusus untukmu. Buka saat kamu siap menemukan kejutan di dalamnya.";
-    let image = project.puzzle?.photo || APP_ORIGIN + "/assets/our-moment.jpg";
+    const fallbackImage = APP_ORIGIN + "/assets/gift-preview-default.png";
+    let image = project.puzzle?.photo || project.cover?.photo || project.memory?.photo || project.reasons?.photo || fallbackImage;
     try {
       const imageUrl = new URL(image, APP_ORIGIN);
-      if (!["https:", "http:"].includes(imageUrl.protocol)) image = APP_ORIGIN + "/assets/our-moment.jpg";
+      if (!["https:", "http:"].includes(imageUrl.protocol)) image = fallbackImage;
       else image = imageUrl.href;
-    } catch { image = APP_ORIGIN + "/assets/our-moment.jpg"; }
+    } catch { image = fallbackImage; }
     return sendHtml(200, page({ title, description, image, giftUrl, redirectUrl }));
   } catch {
     return sendHtml(503, page({
       title: "Crush Note — ada kejutan kecil untukmu",
       description: "Ada cerita kecil yang disiapkan khusus untukmu. Buka saat kamu siap menemukan kejutan di dalamnya.",
-      image: APP_ORIGIN + "/assets/our-moment.jpg", giftUrl, redirectUrl,
+      image: APP_ORIGIN + "/assets/gift-preview-default.png", giftUrl, redirectUrl,
     }));
   }
 }
