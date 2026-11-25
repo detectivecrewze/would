@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@vercel/functions": "^3.11.3",
     "sharp": "^0.35.5"
   },
   "scripts": {
