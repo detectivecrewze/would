@@ -26,7 +26,7 @@ test("share page advertises a versioned JPEG preview endpoint", async () => {
   }), { status: 200 });
   const { response, result } = responseRecorder();
   try {
-    await sharePageHandler({ query: { id: PROJECT_ID } }, response);
+    await sharePageHandler({ query: { id: PROJECT_ID, v: "fresh123" } }, response);
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -34,6 +34,7 @@ test("share page advertises a versioned JPEG preview endpoint", async () => {
   assert.match(result.body, /og:image:type" content="image\/jpeg"/);
   assert.match(result.body, /og:image:width" content="1200"/);
   assert.match(result.body, /api\/share-image\?id=crush-note-customer-1&amp;v=/);
+  assert.match(result.body, /\/share\/crush-note-customer-1\?v=fresh123/);
   assert.doesNotMatch(result.body, /photo\.webp/);
 });
 

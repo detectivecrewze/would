@@ -30,7 +30,9 @@ export default async function handler(request, response) {
     image: APP_ORIGIN + "/assets/our-moment.jpg", giftUrl: APP_ORIGIN + "/", redirectUrl: APP_ORIGIN + "/",
   }));
 
-  const giftUrl = APP_ORIGIN + "/share/" + encodeURIComponent(id);
+  const rawShareVersion = Array.isArray(request.query?.v) ? request.query.v[0] : request.query?.v;
+  const shareVersion = /^[A-Za-z0-9._:-]{1,80}$/.test(String(rawShareVersion || "")) ? String(rawShareVersion) : "";
+  const giftUrl = APP_ORIGIN + "/share/" + encodeURIComponent(id) + (shareVersion ? "?v=" + encodeURIComponent(shareVersion) : "");
   const redirectUrl = APP_ORIGIN + "/?gift=" + encodeURIComponent(id);
   try {
     const result = await fetch(API_BASE + "/api/public/gifts/" + encodeURIComponent(id), { headers: { accept: "application/json" } });

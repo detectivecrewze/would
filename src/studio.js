@@ -28,6 +28,7 @@ let project = loadGift();
 let remoteProjectError = '';
 let remoteProjectReady = !remoteProjectId;
 let giftPublished = false;
+let shareVersion = '';
 
 function showStudioAccessError(message) {
   document.body.dataset.studioAuth = 'invalid';
@@ -53,6 +54,7 @@ if (remoteProjectId) {
     });
     project = result.project;
     giftPublished = result.status === 'published';
+    shareVersion = giftPublished ? Date.now().toString(36) : '';
     remoteProjectReady = true;
     document.body.dataset.studioAuth = 'ready';
     localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
@@ -368,6 +370,7 @@ function announce(message) {
 function persist({ refresh = true } = {}) {
   if (giftPublished) {
     giftPublished = false;
+    shareVersion = '';
     syncShareLink();
   }
   saveState.textContent = ui().saving;
@@ -607,9 +610,11 @@ function renderBarcode() {
 
 function syncShareLink() {
   const shareUrl = document.querySelector('#share-url');
-  shareUrl.value = giftPublished && remoteProjectId
-    ? new URL('/share/' + encodeURIComponent(remoteProjectId), PUBLIC_APP_URL).toString()
-    : '';
+  if (giftPublished && remoteProjectId) {
+    const personalUrl = new URL('/share/' + encodeURIComponent(remoteProjectId), PUBLIC_APP_URL);
+    personalUrl.searchParams.set('v', shareVersion || Date.now().toString(36));
+    shareUrl.value = personalUrl.toString();
+  } else shareUrl.value = '';
   shareUrl.placeholder = project.locale === 'en' ? 'Publish the gift first' : 'Publikasikan gift terlebih dahulu';
   document.querySelector('#copy-link').disabled = !shareUrl.value;
   document.querySelector('#download-barcode').disabled = !shareUrl.value;
@@ -790,6 +795,7 @@ document.querySelector('#finish-gift').addEventListener('click', async (event) =
       headers: { 'X-Studio-Token': studioToken },
     });
     giftPublished = true;
+    shareVersion = Date.now().toString(36);
     syncShareLink();
     if (giftTab) giftTab.location.href = published.giftUrl;
     saveState.textContent = project.locale === 'en' ? 'Published' : 'Gift dipublikasikan';
