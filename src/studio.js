@@ -681,7 +681,10 @@ editor.addEventListener('change', async (event) => {
   try {
     const compressed = await compressImage(input.files[0]);
     const imageBlob = await (await fetch(compressed)).blob();
-    const result = remoteProjectId ? await uploadRemoteMedia(new File([imageBlob], 'photo.webp', { type: 'image/webp' })) : compressed;
+    const imageTypes = { 'image/webp': 'webp', 'image/jpeg': 'jpg', 'image/png': 'png' };
+    const imageType = imageTypes[imageBlob.type] ? imageBlob.type : 'image/jpeg';
+    const imageName = `photo.${imageTypes[imageType]}`;
+    const result = remoteProjectId ? await uploadRemoteMedia(new File([imageBlob], imageName, { type: imageType })) : compressed;
     setByPath(project, input.dataset.photo, result);
     renderPhotoCards();
     persist();

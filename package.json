@@ -2,7 +2,11 @@
   "name": "crush-note",
   "private": true,
   "type": "module",
+  "dependencies": {
+    "sharp": "^0.35.5"
+  },
   "scripts": {
+    "test": "node --test tests/share-preview.test.mjs",
     "dev": "node dev-server.mjs",
     "start": "node dev-server.mjs",
     "dev:site": "node dev-server.mjs",

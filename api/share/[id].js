@@ -14,7 +14,11 @@ function page({ title, description, image, giftUrl, redirectUrl }) {
   const safeImage = escapeHtml(image);
   const safeGiftUrl = escapeHtml(giftUrl);
   const safeRedirectUrl = JSON.stringify(redirectUrl);
-  return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${safeTitle}</title><meta name="description" content="${safeDescription}"><meta property="og:type" content="website"><meta property="og:site_name" content="Crush Note"><meta property="og:title" content="${safeTitle}"><meta property="og:description" content="${safeDescription}"><meta property="og:url" content="${safeGiftUrl}"><meta property="og:image" content="${safeImage}"><meta property="og:image:alt" content="Foto pembuka untuk kejutan kecil"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${safeTitle}"><meta name="twitter:description" content="${safeDescription}"><meta name="twitter:image" content="${safeImage}"><script>window.location.replace(${safeRedirectUrl})</script></head><body><p>Menyiapkan cerita kecil untukmu… <a href="${escapeHtml(redirectUrl)}">Buka gift</a></p></body></html>`;
+  const isPng = String(image).toLowerCase().includes(".png");
+  const imageType = isPng ? "image/png" : "image/jpeg";
+  const imageWidth = isPng ? "1080" : "1200";
+  const imageHeight = isPng ? "1080" : "630";
+  return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${safeTitle}</title><meta name="description" content="${safeDescription}"><meta property="og:type" content="website"><meta property="og:site_name" content="Crush Note"><meta property="og:title" content="${safeTitle}"><meta property="og:description" content="${safeDescription}"><meta property="og:url" content="${safeGiftUrl}"><meta property="og:image" content="${safeImage}"><meta property="og:image:secure_url" content="${safeImage}"><meta property="og:image:type" content="${imageType}"><meta property="og:image:width" content="${imageWidth}"><meta property="og:image:height" content="${imageHeight}"><meta property="og:image:alt" content="Foto pembuka untuk kejutan kecil"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${safeTitle}"><meta name="twitter:description" content="${safeDescription}"><meta name="twitter:image" content="${safeImage}"><script>window.location.replace(${safeRedirectUrl})</script></head><body><p>Menyiapkan cerita kecil untukmu… <a href="${escapeHtml(redirectUrl)}">Buka gift</a></p></body></html>`;
 }
 
 export default async function handler(request, response) {
@@ -42,13 +46,8 @@ export default async function handler(request, response) {
     const description = english
       ? "Someone made a little story just for you. Open it when you are ready to discover the surprise."
       : "Ada cerita kecil yang disiapkan khusus untukmu. Buka saat kamu siap menemukan kejutan di dalamnya.";
-    const fallbackImage = APP_ORIGIN + "/assets/gift-preview-default.png";
-    let image = project.puzzle?.photo || project.cover?.photo || project.memory?.photo || project.reasons?.photo || fallbackImage;
-    try {
-      const imageUrl = new URL(image, APP_ORIGIN);
-      if (!["https:", "http:"].includes(imageUrl.protocol)) image = fallbackImage;
-      else image = imageUrl.href;
-    } catch { image = fallbackImage; }
+    const version = encodeURIComponent(payload.publishedAt || "1");
+    const image = APP_ORIGIN + "/api/share-image?id=" + encodeURIComponent(id) + "&v=" + version;
     return sendHtml(200, page({ title, description, image, giftUrl, redirectUrl }));
   } catch {
     return sendHtml(503, page({
